@@ -1,0 +1,48 @@
+name: Vynaris
+description: >-
+  OpenAI-compatible LLM inference gateway with evidence-based model routing and a per-request cost receipt attached to
+  every response. Offers routed inference at provider list price plus a small markup, Vynaris-hosted reduced-refusal
+  models, and enterprise self-hosted deployments. Early beta.
+url: https://raw.githubusercontent.com/api-evangelist/vynaris/refs/heads/main/apis.yml
+created: '2026-08-26'
+modified: '2026-08-26'
+specificationVersion: '0.21'
+tags:
+  - AI
+  - LLM Gateway
+  - LLM Router / Aggregator
+  - Inference / Model Serving
+  - AI Cost Management / FinOps
+  - Developer Tools
+  - Agent Infrastructure
+apis:
+  - name: Vynaris Gateway API
+    description: >-
+      REST API in OpenAI Chat Completions wire format. Primary endpoint POST /v1/chat/completions with SSE streaming and
+      tool/function-calling passthrough. Supporting endpoints for ping, usage, ledger, and programmatic self-onboarding.
+      Bearer API key auth. Includes llms.txt and an agents.md agent-facing runbook.
+    humanURL: https://vynaris.com/docs
+    baseURL: https://api.vynaris.com/v1
+    tags:
+      - AI
+      - LLM Gateway
+      - LLM Router / Aggregator
+      - Inference / Model Serving
+      - AI Cost Management / FinOps
+      - Developer Tools
+      - Agent Infrastructure
+    properties:
+      - type: Documentation
+        url: https://vynaris.com/docs
+      - type: LLMsTxt
+        url: https://api.vynaris.com/llms.txt
+      - type: AgentSkill
+        url: https://api.vynaris.com/agents.md
+maintainers:
+  - FN: Vynaris (Wavicle.tech)
+    url: https://vynaris.com
+generated:
+  by: apis.io/add
+  model: claude-opus-4-8
+  confidence: 90
+  at: '2026-08-26T19:07:38.480Z'
