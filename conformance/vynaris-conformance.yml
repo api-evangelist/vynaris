@@ -1,0 +1,176 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/docs
+docs:
+- https://vynaris.com/docs
+- https://api.vynaris.com/agents.md
+- https://vynaris.com/privacy
+- https://vynaris.com/terms
+note: >-
+  Assertions read from the provider's published surfaces on 2026-08-26. No
+  OpenAPI exists to derive from, so nothing here is inferred from a spec.
+  Entries with conforms:false are recorded because their absence is a
+  measurement, not to penalise a market that has no such standard.
+conformance:
+- id: openai-chat-completions
+  name: OpenAI Chat Completions wire format
+  conforms: true
+  category: domain-standard
+  evidence: >-
+    "Vynaris is an OpenAI-compatible chat completions gateway at
+    https://api.vynaris.com/v1. Swap the base URL in whatever client you
+    already use, keep your prompts and tool definitions." The docs ship
+    working snippets for the official OpenAI Python and TypeScript SDKs
+    constructed with base_url/baseURL overrides only, plus Cursor, OpenClaw and
+    Pi configs that declare api: "openai-completions".
+  evidence_url: https://vynaris.com/docs#quickstart
+  note: >-
+    This is the de-facto interface standard of the LLM gateway/router market
+    and it is the whole product thesis here - the provider states that leaving
+    is "a one-line base_url change back to any provider", i.e. conformance is
+    marketed as the anti-lock-in guarantee. Extension beyond the standard: a
+    non-standard top-level `vynaris` object is added to the response body
+    alongside the standard OpenAI fields, and a `model` value of "auto" is
+    accepted where the standard expects a concrete model id.
+- id: anthropic-messages
+  name: Anthropic Messages API wire format
+  conforms: partial
+  category: domain-standard
+  evidence: >-
+    The Anthropic Python SDK is documented to work against
+    base_url=https://api.vynaris.com with auth_token, and Claude Code is
+    configured via ANTHROPIC_BASE_URL/ANTHROPIC_AUTH_TOKEN. But the provider
+    states plainly, in both the docs and agents.md, that native /v1/messages is
+    "not yet implemented (the Anthropic Python SDK works via base_url; raw
+    /v1/messages calls do not)", and tells the reader to treat the Claude Code
+    setup as "environment setup for future compatibility rather than a
+    guarantee that every Claude Code call is served today".
+  evidence_url: https://vynaris.com/docs#anthropic-python
+  note: >-
+    Recorded as partial with the provider's own caveat rather than as a claim,
+    because the marketing line ("OpenAI-compatible and
+    Anthropic-SDK-compatible") is broader than the documented behavior.
+- id: sse
+  name: Server-Sent Events streaming (text/event-stream)
+  conforms: true
+  category: transport
+  evidence: '"streaming supported (SSE)" on /v1/chat/completions; the hosted-model example sends "stream": true.'
+  evidence_url: https://vynaris.com/docs#hosted-models
+- id: rfc6750
+  name: OAuth 2.0 Bearer Token Usage (Authorization header form only)
+  conforms: partial
+  category: security
+  evidence: >-
+    Credentials are presented as `Authorization: Bearer vyn_sk_live_...`, which
+    is the RFC 6750 header form, but the token is a long-lived opaque API key,
+    not an OAuth 2.0 access token. There is no authorization server, no token
+    endpoint and no scopes.
+  evidence_url: https://vynaris.com/docs#quickstart
+- id: rfc9457
+  name: Problem Details for HTTP APIs
+  conforms: false
+  category: cross-cutting
+  evidence: >-
+    Errors use the OpenAI vendor envelope {"error": {"message", "type"}},
+    observed live at https://api.vynaris.com/v1/models (401) on 2026-08-26. No
+    application/problem+json is served.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  category: security
+  evidence: >-
+    /.well-known/oauth-authorization-server and
+    /.well-known/oauth-protected-resource returned 404 on api.vynaris.com,
+    vynaris.com and app.vynaris.com. API auth is a static bearer key. GitHub
+    and Google sign-in exist for the human dashboard only.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  category: security
+  evidence: /.well-known/openid-configuration returned 404 on all three Vynaris hosts.
+- id: rfc9116
+  name: security.txt
+  conforms: false
+  category: security
+  evidence: /.well-known/security.txt returned 404 on all three Vynaris hosts.
+- id: rfc8594
+  name: Sunset header / deprecation signalling
+  conforms: false
+  category: lifecycle
+  evidence: No deprecation or sunset policy is published. See lifecycle/vynaris-lifecycle.yml.
+- id: idempotency-key
+  name: Idempotency-Key on unsafe requests
+  conforms: false
+  category: cross-cutting
+  evidence: >-
+    No idempotency header or dedup window is documented, on an API whose write
+    surface debits real money. See conventions/vynaris-conventions.yml.
+- id: llmstxt
+  name: llms.txt
+  conforms: true
+  category: agent-readiness
+  evidence: >-
+    Served at https://api.vynaris.com/llms.txt (200, 3,549 bytes) and mirrored
+    at https://vynaris.com/llms.txt. Correct llms.txt shape - H1, blockquote
+    summary, and an H2 "Docs" section of annotated links. Provider-stated last
+    update 2026-08-22.
+  evidence_url: https://api.vynaris.com/llms.txt
+- id: agents-md
+  name: AGENTS.md-style agent instruction document
+  conforms: true
+  category: agent-readiness
+  evidence: >-
+    Served at https://api.vynaris.com/agents.md (200, 12,023 bytes) and
+    promoted from llms.txt as "the complete agent-facing manual - read this".
+  evidence_url: https://api.vynaris.com/agents.md
+- id: mcp
+  name: Model Context Protocol
+  conforms: false
+  category: agent-readiness
+  evidence: >-
+    No MCP server, hosted or local. tools/list POSTs to /mcp on both web hosts
+    and the API host returned 404; mcp.vynaris.com does not resolve. MCP is
+    named nowhere in llms.txt or agents.md.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  category: agent-readiness
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json returned 404 on
+    all three Vynaris hosts.
+certifications:
+  published: false
+  claimed: none
+  provider_statement: >-
+    "We encrypt data in transit and store API keys hashed, not in plain text.
+    No system is perfectly secure, and we don't claim any particular
+    certification - but we take reasonable, standard precautions to protect
+    your data."
+  source: https://vynaris.com/privacy
+  note: >-
+    The provider explicitly and creditably disclaims SOC 2, ISO 27001 and every
+    other certification. No Compliance or TrustCenter pointer is emitted, and
+    none should be manufactured: the absence here is stated by the provider,
+    not inferred by us.
+data_governance:
+  training_on_customer_content: >-
+    "Vynaris does not train models on your prompt or completion content." A
+    third-party provider may, only for keys where the user explicitly enables
+    provider data collection.
+  default_posture: each API key starts metadata-only, excluding deployments marked as potentially retaining or using content
+  hosted_model_exception: >-
+    For the three Vynaris-hosted reduced-refusal model IDs, prompt and output
+    bodies are never persisted, and this overrides the key's transcript-capture
+    setting. Only billing, reliability, account and security metadata is kept.
+  data_residency: US servers for account and request metadata; upstream providers process prompts wherever they operate; region is not constrainable per key
+  subprocessors_named:
+  - Mixpanel (product and website analytics)
+  - X (conversion measurement for the provider's own ads)
+  - Not Diamond (routing-evaluation comparison, opted-in keys only)
+  - an unnamed merchant-of-record payment partner
+  source: https://vynaris.com/privacy
+jurisdiction:
+  operator: sole proprietor based in India
+  governing_law: India
+  venue: courts of Gujarat, India
+  source: https://vynaris.com/terms

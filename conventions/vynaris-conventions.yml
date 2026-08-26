@@ -1,0 +1,183 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/docs
+docs:
+- https://vynaris.com/docs
+- https://api.vynaris.com/agents.md
+- https://vynaris.com/terms
+- https://vynaris.com/privacy
+note: >-
+  Cross-cutting runtime semantics read from the provider's published docs.
+  There is no OpenAPI to derive from, so every field below traces to a docs URL
+  or to a live response observed on 2026-08-26.
+wire_format:
+  family: OpenAI Chat Completions
+  statement: >-
+    Vynaris is a drop-in OpenAI-compatible endpoint. Integration is a base_url
+    change; prompts, tool definitions and SDKs are unchanged.
+  streaming: SSE, supported on /v1/chat/completions
+  tool_calling: function/tool-calling passthrough supported
+  anthropic_compat: >-
+    The Anthropic Python SDK works with base_url=https://api.vynaris.com and
+    auth_token. Native /v1/messages is explicitly NOT implemented.
+  source: https://vynaris.com/docs#quickstart
+authentication:
+  style: bearer api key
+  detail: see authentication/vynaris-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  scope: null
+  retention: null
+  evidence: >-
+    No Idempotency-Key header, no request-deduplication window, and no
+    idempotency section appears in the docs, agents.md, or terms. The API has a
+    real write surface - POST /v1/chat/completions debits prepaid credit and
+    POST /v1/accounts creates an account - so this is an absence, not an N/A.
+  consequence_for_agents: >-
+    A retried completion after a client-side timeout is billed twice. The
+    provider's own retry guidance ("502 - retrying is reasonable") is therefore
+    a retry with no dedup key behind it.
+  note: >-
+    Because idempotency is NOT supported, no `Idempotency` pointer is emitted
+    in apis.yml.
+pagination:
+  style: undocumented
+  params: []
+  response_fields: []
+  note: >-
+    GET /v1/ledger is described as "per-request history" and GET /v1/usage as
+    "recent requests", but no page/cursor/limit parameter and no pagination
+    envelope is documented. An agent cannot know how to walk a long ledger.
+request_tracing:
+  supported: true
+  response_header: x-vynaris-request-id
+  body_field: vynaris.request_id
+  format: req_<id>
+  correlated_with: the same request_id appears on the ledger row for that call
+  source: https://vynaris.com/docs#receipt
+response_metadata:
+  name: cost receipt
+  description: >-
+    The provider's distinguishing convention. Every non-streaming response body
+    carries a `vynaris` object, and the same facts ride back as headers so a
+    caller can read them without parsing the body.
+  body_block:
+    key: vynaris
+    fields:
+    - request_id
+    - requested_model
+    - served_model
+    - cost_usd
+    - direct_equivalent_usd
+    - baseline
+    baseline_value: provider list price, uncached
+  headers:
+  - x-vynaris-request-id
+  - x-vynaris-served-model
+  - x-vynaris-cost-usd
+  - x-vynaris-baseline-usd
+  - x-vynaris-saved
+  - x-vynaris-balance
+  header_naming_discrepancy: >-
+    agents.md names the cost header `x-vynaris-cost` and adds
+    `x-vynaris-balance`; the docs page names it `x-vynaris-cost-usd` and adds
+    `x-vynaris-baseline-usd` and `x-vynaris-saved`. The two agent-facing
+    surfaces do not agree on the header set. Unverified either way - reading
+    them requires a funded key.
+  source: https://vynaris.com/docs#receipt
+versioning:
+  style: path prefix
+  current: v1
+  detail: see lifecycle/vynaris-lifecycle.yml
+error_envelope:
+  shape: '{"error": {"message": "...", "type": "..."}}'
+  rfc9457: false
+  detail: see errors/vynaris-error-codes.yml
+rate_limit_signaling:
+  headers_published: false
+  status_on_exhaustion: not documented
+  note: >-
+    No X-RateLimit-*, no RateLimit-*, no Retry-After, and no 429 appear in any
+    published surface. The only documented backpressure is economic: requests
+    stop at a zero balance or a per-key spend cap with a terminal 402. See
+    rate-limits/vynaris-rate-limits.yml.
+dry_run_mode:
+  supported: false
+  note: >-
+    No dry-run, preview, or cost-estimate-before-send parameter is documented.
+    The nearest surface is the human-facing calculator at
+    https://vynaris.com/calculator, which is a web form, not an API. An agent
+    cannot price a call before making it; it can only read the receipt after.
+reversibility:
+  grade: documented
+  grade_basis: >-
+    A reversal path exists and is described in the provider's own terms, but no
+    numeric window is stated for it anywhere. Per the pipeline's grading rule
+    that is `documented` (0.4), not `verified` (1.0). No window has been
+    invented here.
+  write_surfaces:
+  - operation: POST /v1/chat/completions
+    consequence: debits prepaid credit; may transmit prompt content to a third-party inference provider
+    reversal: quality refund, issued as Vynaris credit
+    reversal_operation: null
+    reversal_is_api: false
+    reversal_channel: user-submitted failure feedback, reviewed by the provider
+    window_stated: false
+    window_text: >-
+      The terms say a quality refund requires that "you submit useful failure
+      feedback within the stated reporting window" - but the reporting window
+      itself is not stated on the terms page, the pricing page, or in
+      agents.md. The docs say the reversal exists; they never say how long you
+      have.
+    conditions:
+    - only for requests routed with model="auto"
+    - only when the request and response were stored (transcript capture enabled on the key)
+    - one refund per request
+    - may be queued for review under fair-use limits
+    - machine-detected technical failures are credited automatically where a usage charge exists
+    irreversible_side_effect: >-
+      Content already transmitted to an upstream provider cannot be recalled. A
+      credit refund returns the money, not the prompt.
+    source: https://vynaris.com/terms
+  - operation: POST /v1/accounts
+    consequence: creates an account and issues a provisional API key
+    reversal: account and data deletion on request by email
+    reversal_operation: null
+    reversal_is_api: false
+    reversal_channel: email hello@vynaris.com
+    window_stated: false
+    window_text: >-
+      "We'll do so promptly, except where we're required to retain billing
+      records for legal or accounting reasons." No number is given.
+    source: https://vynaris.com/privacy
+  - operation: prepaid top-up / plan charge (checkout, not an API call)
+    consequence: adds USD credit to the account balance
+    reversal: refund of unused paid balance on request, minus payment-processing fees
+    reversal_operation: null
+    reversal_is_api: false
+    window_stated: true
+    window_text: >-
+      "You can request a refund of your paid balance at any time." An
+      open-ended window IS a stated window. Promotional credit is explicitly
+      non-refundable and non-transferable; reversed or refunded payments do not
+      count toward hosted-model qualification.
+    source: https://vynaris.com/terms
+  key_revocation:
+    supported: true
+    reversal: keys are revocable per key; a revoked key returns 401
+    window_stated: true
+    window_text: immediate, at any time
+    note: >-
+      The strongest genuine reversibility control on this API. It stops future
+      spend under a leaked key; it does not undo spend already incurred, which
+      the terms make explicit ("Any usage that happens under your API key is
+      billed to your account, whether or not you authorized it").
+    source: https://vynaris.com/terms
+  spend_controls:
+    per_key_cap: true
+    balance_floor: >-
+      "balance never goes materially negative - at most one in-flight request
+      of float, because streams are never cut mid-completion"
+    overages: none
+    source: https://api.vynaris.com/agents.md

@@ -1,0 +1,94 @@
+generated: '2026-08-26'
+method: probed
+source: live GET probes of /.well-known/* on every Vynaris host
+note: >-
+  Every /.well-known/ path probed on all three Vynaris hosts returned 404. No
+  document was served, so NO WellKnown or SecurityTxt pointer is emitted in
+  apis.yml - this file records a measured absence, not a presence. The two web
+  hosts (vynaris.com, app.vynaris.com) answer 404 with the Next.js 404 page
+  rather than a bare status, so the body was read on each: it is the site's
+  "404: This page could not be found" shell, not a document. api.vynaris.com
+  answers with a 179-byte plain "Not Found" page.
+hosts:
+- host: vynaris.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: api.vynaris.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: app.vynaris.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+adjacent_agent_documents:
+- url: https://api.vynaris.com/llms.txt
+  status: 200
+  note: served, and also mirrored at https://vynaris.com/llms.txt (200, byte-identical size)
+- url: https://api.vynaris.com/agents.md
+  status: 200
+  note: the provider's agent runbook; linked from llms.txt
+- url: https://vynaris.com/robots.txt
+  status: 200
+  note: "User-Agent: * / Allow: / plus a Sitemap line - no agent-specific rules, no disallow"

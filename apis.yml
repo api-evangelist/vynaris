@@ -1,13 +1,33 @@
 name: Vynaris
-description: >-
-  OpenAI-compatible LLM inference gateway with evidence-based model routing and a per-request cost receipt attached to
-  every response. Offers routed inference at provider list price plus a small markup, Vynaris-hosted reduced-refusal
-  models, and enterprise self-hosted deployments. Early beta.
+aid: vynaris
+description: OpenAI-compatible LLM inference gateway with evidence-based model routing and a per-request cost receipt attached
+  to every response. Offers routed inference at provider list price plus a small markup, Vynaris-hosted reduced-refusal models,
+  and enterprise self-hosted deployments. Early beta.
 url: https://raw.githubusercontent.com/api-evangelist/vynaris/refs/heads/main/apis.yml
 created: '2026-08-26'
 modified: '2026-08-26'
 specificationVersion: '0.21'
+image: https://vynaris.com/icon.png
 tags:
+- AI
+- LLM Gateway
+- LLM Router / Aggregator
+- Inference / Model Serving
+- AI Cost Management / FinOps
+- Developer Tools
+- Agent Infrastructure
+apis:
+- name: Vynaris Gateway API
+  description: 'REST API in OpenAI Chat Completions wire format. Primary endpoint POST /v1/chat/completions with SSE streaming
+    and tool/function-calling passthrough. Supporting endpoints for ping, usage, ledger, and programmatic self-onboarding.
+    Bearer API key auth. Includes llms.txt and an agents.md agent-facing runbook.
+
+
+    No OpenAPI is published. The API is an OpenAI-wire-format inference gateway at api.vynaris.com/v1/chat/completions; /v1/ping
+    answered 200 on 2026-08-26. Recorded as a live API with no machine-readable contract -- not as a missing one.'
+  humanURL: https://vynaris.com/docs
+  baseURL: https://api.vynaris.com/v1
+  tags:
   - AI
   - LLM Gateway
   - LLM Router / Aggregator
@@ -15,34 +35,62 @@ tags:
   - AI Cost Management / FinOps
   - Developer Tools
   - Agent Infrastructure
-apis:
-  - name: Vynaris Gateway API
-    description: >-
-      REST API in OpenAI Chat Completions wire format. Primary endpoint POST /v1/chat/completions with SSE streaming and
-      tool/function-calling passthrough. Supporting endpoints for ping, usage, ledger, and programmatic self-onboarding.
-      Bearer API key auth. Includes llms.txt and an agents.md agent-facing runbook.
-    humanURL: https://vynaris.com/docs
-    baseURL: https://api.vynaris.com/v1
-    tags:
-      - AI
-      - LLM Gateway
-      - LLM Router / Aggregator
-      - Inference / Model Serving
-      - AI Cost Management / FinOps
-      - Developer Tools
-      - Agent Infrastructure
-    properties:
-      - type: Documentation
-        url: https://vynaris.com/docs
-      - type: LLMsTxt
-        url: https://api.vynaris.com/llms.txt
-      - type: AgentSkill
-        url: https://api.vynaris.com/agents.md
+  properties:
+  - type: Documentation
+    url: https://vynaris.com/docs
+  - type: LLMsTxt
+    url: https://api.vynaris.com/llms.txt
+  - type: AgentSkill
+    url: https://api.vynaris.com/agents.md
 maintainers:
-  - FN: Vynaris (Wavicle.tech)
-    url: https://vynaris.com
+- FN: Vynaris (Wavicle.tech)
+  email: hello@vynaris.com
+  url: https://vynaris.com
 generated:
   by: apis.io/add
   model: claude-opus-4-8
   confidence: 90
   at: '2026-08-26T19:07:38.480Z'
+common:
+- type: DomainSecurity
+  url: security/vynaris-domain-security.yml
+- type: Conventions
+  url: conventions/vynaris-conventions.yml
+- type: Conformance
+  url: conformance/vynaris-conformance.yml
+- type: ErrorCatalog
+  url: errors/vynaris-error-codes.yml
+- type: Lifecycle
+  url: lifecycle/vynaris-lifecycle.yml
+- type: Authentication
+  url: authentication/vynaris-authentication.yml
+- type: DataModel
+  url: data-model/vynaris-data-model.yml
+- type: Plans
+  url: plans/vynaris-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/vynaris-rate-limits.yml
+- type: LLMsTxt
+  url: llms/vynaris-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: GettingStarted
+  url: https://vynaris.com/docs#quickstart
+- type: Pricing
+  url: https://vynaris.com/pricing
+- type: SignUp
+  url: https://app.vynaris.com/signin
+- type: TermsOfService
+  url: https://vynaris.com/terms
+- type: PrivacyPolicy
+  url: https://vynaris.com/privacy
+- type: Blog
+  url: https://vynaris.com/blog
+- type: Support
+  url: mailto:hello@vynaris.com
+
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1

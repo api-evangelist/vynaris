@@ -1,0 +1,81 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live POST tools/list probes plus the provider's own llms.txt and agents.md,
+  neither of which mentions MCP anywhere.
+name: Vynaris MCP (none published)
+status: candidate
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+finding: >-
+  Vynaris publishes NO MCP server, hosted or local. This is notable because the
+  provider is otherwise unusually agent-forward - it ships llms.txt, an
+  agents.md operations manual, programmatic self-onboarding, and a
+  machine-readable cost receipt on every response - yet the one surface an MCP
+  client could connect to does not exist. The tools below are a DERIVED
+  candidate set from the six REST endpoints the provider documents in prose;
+  nobody ships them.
+probes:
+- url: https://api.vynaris.com/mcp
+  method: POST tools/list
+  status: 404
+- url: https://api.vynaris.com/v1/mcp
+  method: POST tools/list
+  status: 404
+- url: https://vynaris.com/mcp
+  method: POST tools/list
+  status: 404
+- url: https://mcp.vynaris.com/mcp
+  method: POST tools/list
+  status: '<no response>'
+  note: DNS does not resolve for mcp.vynaris.com
+- url: https://api.vynaris.com/.well-known/oauth-protected-resource
+  method: GET
+  status: 404
+- url: https://api.vynaris.com/.well-known/oauth-authorization-server
+  method: GET
+  status: 404
+candidate_tools:
+- name: vynaris_ping
+  description: 'Verify network path and API key state. Returns {"ok": true, "key": "valid"} or {"ok": true, "key": "invalid_or_missing"}.'
+  rest: GET /v1/ping
+  auth: bearer api-key (also answers 200 anonymously with key "invalid_or_missing")
+  source: https://vynaris.com/docs#usage
+- name: vynaris_create_account
+  description: Programmatic self-onboarding. Returns a provisional API key, a claim_url, and a note. Provisional keys authenticate but hold $0 balance.
+  rest: POST /v1/accounts
+  auth: none
+  source: https://api.vynaris.com/agents.md
+- name: vynaris_chat_completion
+  description: OpenAI Chat Completions wire format. model "auto" lets the router choose; a frontier model name is treated as intent and may be served by a cheaper equivalent, always disclosed in the receipt.
+  rest: POST /v1/chat/completions
+  auth: bearer api-key
+  source: https://vynaris.com/docs#quickstart
+- name: vynaris_list_models
+  description: Authenticated model catalog including hosted-model IDs, retail prices, context window, and paid-credit qualification.
+  rest: GET /v1/models
+  auth: bearer api-key
+  source: https://vynaris.com/docs#usage
+- name: vynaris_get_usage
+  description: Current balance and aggregate usage for the authenticated account. Documented as the endpoint an agent polls to self-monitor spend.
+  rest: GET /v1/usage
+  auth: bearer api-key
+  source: https://vynaris.com/docs#usage
+- name: vynaris_get_ledger
+  description: Append-only per-request credit ledger - request id, requested and served model, cost, and direct-equivalent cost per call. Exportable as CSV from the dashboard.
+  rest: GET /v1/ledger
+  auth: bearer api-key
+  source: https://vynaris.com/docs#usage
+notes:
+- >-
+  No apis.yml MCPServer pointer is emitted. A derived candidate list is not a
+  server, and asserting one would credit Vynaris with an agent surface it does
+  not operate.
+- >-
+  No tool crosswalk is emitted either: a crosswalk binds MCP tools to OpenAPI
+  operationIds, and Vynaris publishes neither an MCP server nor an OpenAPI.

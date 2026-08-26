@@ -1,0 +1,140 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/pricing
+docs:
+- https://vynaris.com/pricing
+- https://vynaris.com/enterprise
+- https://vynaris.com/uncensored-models
+- https://api.vynaris.com/agents.md
+currency: USD
+plan_count: 5
+billing_model: >-
+  Prepaid credit. Two ways to fund it: one-time top-ups, or a fixed monthly
+  plan whose charge converts to API credit. Usage is deducted per request at
+  the upstream provider's list price plus a convenience fee, or at published
+  retail rates for Vynaris-hosted models. No usage overages - requests stop at
+  a zero balance.
+free_tier: false
+free_tier_note: >-
+  Signup includes no free credit. Starting balance is $0 and a human must add
+  at least $50 of prepaid credit before the first billable request. A
+  programmatically created account authenticates but returns 402 until funded.
+plans:
+- name: Pay-as-you-go (router)
+  price: 0
+  billing_period: none
+  model: usage-based on prepaid credit
+  unit_price: upstream provider list price x 1.03, dropping to x 1.01 once monthly usage passes $500
+  fee_note: >-
+    A $500 top-up activates the 1% rate immediately for that calendar month.
+  funding: one-time top-ups of $50, $100, $250 or $500
+  minimum_first_funding: 50
+  included_quota: none
+  overage: none - requests stop when available balance reaches zero
+  limits:
+  - no overage charges
+  - optional per-key spend caps
+  - credit does not expire silently
+  source: https://vynaris.com/pricing
+- name: Vynaris S
+  price: 5
+  currency: USD
+  billing_period: monthly
+  included_quota: $5 in API credit every month
+  overage: none
+  rollover: unused credit rolls over
+  features:
+  - full model pool + automatic routing
+  - OpenAI-compatible API
+  - privacy-restricted providers by default
+  - no training by Vynaris
+  - per-request receipts + CSV ledger
+  - top up anytime; no overage charges
+  - reliability refunds
+  source: https://vynaris.com/pricing
+- name: Vynaris L
+  price: 15
+  currency: USD
+  billing_period: monthly
+  included_quota: $15 in API credit every month
+  overage: none
+  rollover: unused credit rolls over
+  features:
+  - full model pool + automatic routing
+  - OpenAI-compatible API
+  - privacy-restricted providers by default
+  - no training by Vynaris
+  - per-request receipts + CSV ledger
+  - top up anytime; no overage charges
+  - reliability refunds
+  source: https://vynaris.com/pricing
+- name: Vynaris XL
+  price: 50
+  currency: USD
+  billing_period: monthly
+  included_quota: $50 in API credit every month
+  overage: none
+  rollover: unused credit rolls over
+  features:
+  - private uncensored model access (qualifies via the $50 credit purchase)
+  - full model pool + automatic routing
+  - OpenAI-compatible API
+  - privacy-restricted providers by default
+  - no training by Vynaris
+  - per-request receipts + CSV ledger
+  - top up anytime; no overage charges
+  - reliability refunds
+  source: https://vynaris.com/pricing
+- name: Enterprise (self-hosted)
+  price: 5000
+  currency: USD
+  billing_period: annual
+  contact_sales: true
+  target: teams spending $5k-100k/month on LLM APIs
+  included: installation, updates, and security patches
+  model: >-
+    The gateway is installed on the customer's own infrastructure and operated
+    by them, routing through the customer's own provider accounts at their own
+    rates. Vynaris is never in the compute bill.
+  source: https://vynaris.com/enterprise
+hosted_model_rates:
+  note: >-
+    Vynaris-hosted reduced-refusal models are billed at published retail token
+    rates rather than upstream-cost-plus-fee, and are never substituted by the
+    router. A successful purchase of at least $50 in API credit qualifies an
+    account; access remains available as that balance is used.
+  models:
+  - id: vynaris/qwen3.6-35b-a3b-uncensored
+    input_per_million_usd: 1.00
+    output_per_million_usd: 5.00
+  - id: vynaris/qwen3.8-27b-uncensored
+    input_per_million_usd: 1.00
+    output_per_million_usd: 7.00
+  - id: vynaris/deepseek-v4-flash-uncensored
+    input_per_million_usd: 2.00
+    output_per_million_usd: 11.00
+  context_window: up to 128K API context
+  source: https://vynaris.com/pricing
+announced_not_yet_priced_as_a_plan:
+- name: Kimi K3 founding reservation
+  input_per_million_usd: 1.50
+  output_per_million_usd: 7.00
+  status: reservation from $50, pre-launch
+  source: https://vynaris.com/kimi-k3-inference
+payments:
+  merchant_of_record: third-party payment partner (named as Dodo Payments in agents.md; the pricing page says only "our merchant-of-record payment partner")
+  methods_count: 26
+  methods_note: >-
+    Cards, Apple/Google/Amazon Pay, Cash App, Klarna, Afterpay/Clearpay, UPI,
+    iDEAL, Bancontact, EPS, Multibanco, Revolut Pay, Satispay, Billie, Pix,
+    WeChat Pay, Kakao Pay, Naver Pay, Przelewy24, BLIK, Zip, and stablecoins
+    (USDC, USDP, USDG).
+  refunds: unused credits refundable on request minus processor fees; promotional credit is not refundable
+  source: https://vynaris.com/pricing
+machine_readable_pricing:
+  published: false
+  note: >-
+    GET /v1/models is documented to return the model catalog with retail
+    prices, context and paid-credit qualification - but it requires a funded
+    key (401 anonymously on 2026-08-26), so no anonymous machine-readable
+    price feed exists. https://vynaris.com/models is a human pricing table.

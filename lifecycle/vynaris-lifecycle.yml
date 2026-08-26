@@ -1,0 +1,97 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/docs
+docs:
+- https://vynaris.com/docs
+- https://vynaris.com/terms
+- https://api.vynaris.com/agents.md
+maturity: early beta
+maturity_source: >-
+  The site header carries an explicit "Early beta" badge on every page
+  (observed 2026-08-26 on https://vynaris.com/docs).
+versioning:
+  scheme: path prefix
+  current: v1
+  base: https://api.vynaris.com/v1
+  policy_published: false
+  note: >-
+    The API is versioned in the path (/v1) but no versioning policy, no
+    version-negotiation header, and no statement about how a v2 would be
+    introduced is published anywhere on the site or in agents.md.
+deprecation:
+  policy_published: false
+  sunset_header: unknown
+  deprecation_header: unknown
+  rfc8594: false
+  note: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation header
+    documentation, and no deprecated-endpoint list. Nothing to point a
+    Deprecation type at.
+status_page:
+  published: false
+  health_endpoint: https://api.vynaris.com/v1/ping
+  health_endpoint_status: 200
+  note: >-
+    The footer's "API health" link resolves to GET /v1/ping, a JSON liveness
+    check that answers 200 anonymously. That is a health endpoint, not a status
+    page - there is no incident history, no uptime record, and no subscribable
+    status feed - so no StatusPage pointer is emitted. https://vynaris.com/status
+    returned 404 on 2026-08-26.
+sla:
+  published: false
+  statement: >-
+    "Vynaris's self-serve plan doesn't come with an uptime SLA." The terms
+    additionally disclaim warranties and cap liability at the amount paid in
+    the 3 months before a claim.
+  source: https://vynaris.com/terms
+  reliability_credits: >-
+    All three fixed plans advertise "Reliability refunds", and the terms
+    describe machine-detected technical failures being credited automatically
+    where a usage charge exists. This is a credit mechanism, not an SLA.
+changelog:
+  published: false
+  note: >-
+    https://vynaris.com/changelog returned 404 on 2026-08-26 and no changelog
+    URL appears in the sitemap (175 URLs, of which 111 are blog posts). The
+    blog is dense with dated pricing analysis but is editorial, not a product
+    changelog, so no ChangeLog pointer is emitted.
+dated_surfaces:
+- surface: https://api.vynaris.com/llms.txt
+  provider_stated_date: '2026-08-22'
+- surface: https://api.vynaris.com/agents.md
+  provider_stated_date: '2026-08-22'
+- surface: https://vynaris.com/terms
+  provider_stated_date: '2026-08-21'
+  label: Effective
+roadmap:
+  page_published: false
+  stated_future_work:
+  - item: Native Anthropic /v1/messages wire format
+    status: not yet implemented
+    provider_statement: >-
+      "Hard requirement for /v1/messages native Anthropic wire format today:
+      not yet implemented (the Anthropic Python SDK works via base_url; raw
+      /v1/messages calls do not). Check this document again later; this
+      changes."
+    source: https://api.vynaris.com/agents.md
+  - item: Kimi K3 hosted inference
+    status: founding reservation, pre-launch
+    provider_statement: A site-wide banner offers a "Kimi K3 founding reservation" at $1.50/M input, $7/M output.
+    source: https://vynaris.com/kimi-k3-inference
+  note: >-
+    These are dated forward-looking statements in the provider's own agent
+    manual and marketing, not a roadmap page, so no Roadmap pointer is emitted.
+shutdown_commitment:
+  claimed: >-
+    agents.md states "If Vynaris ever shuts down: 90 days' notice and unused
+    credits refunded (stated publicly at https://vynaris.com/pricing)."
+  verified: false
+  discrepancy: >-
+    CHECKED AND NOT FOUND. https://vynaris.com/pricing was fetched on
+    2026-08-26 (HTTP 200, 76,262 bytes) and contains no occurrence of "90
+    days", "notice", "shut" or any wind-down pledge. The terms of service
+    (effective 2026-08-21) also do not state a notice period; they state only
+    that unused credits are refundable on request minus processing fees. The
+    agent-facing manual therefore cites a public commitment that the cited page
+    does not carry. This is the kind of claim an agent would relay to a buyer
+    verbatim.

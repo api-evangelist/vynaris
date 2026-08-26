@@ -1,0 +1,78 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  Registry metadata queries against npm, PyPI, RubyGems, crates.io and the
+  GitHub API, plus the provider's docs and footer link inventory.
+package_count: 0
+official_package_count: 0
+packages: []
+finding: >-
+  Vynaris publishes NO first-party client library in any language, and no
+  first-party CLI. This is a design position rather than a gap: the product is
+  a drop-in OpenAI-compatible endpoint, and the documented integration path for
+  all seven harnesses is to keep the client the caller already has and change
+  base_url. The docs never offer an SDK to install.
+searched:
+- registry: npm
+  query: registry.npmjs.org/-/v1/search?text=vynaris
+  results: 0
+  status: 200
+- registry: npm
+  query: registry.npmjs.org/vynaris
+  status: 404
+- registry: pypi
+  query: pypi.org/pypi/vynaris/json
+  status: 404
+- registry: pypi
+  query: pypi.org/pypi/vynaris-sdk/json
+  status: 404
+- registry: rubygems
+  query: rubygems.org/api/v1/gems/vynaris.json
+  status: 404
+- registry: crates.io
+  query: crates.io/api/v1/crates/vynaris
+  status: 403
+  note: crates.io rejected the unauthenticated User-Agent; not evidence of a crate either way
+- registry: github
+  query: api.github.com/orgs/vynaris
+  status: 404
+  note: no GitHub organization exists for this provider
+- registry: github
+  query: api.github.com/search/repositories?q=vynaris
+  status: 200
+  results: 1
+  note: >-
+    The single hit is api-evangelist/vynaris - this catalog's own profile repo,
+    not a provider artifact.
+third_party_clients_documented:
+  note: >-
+    Recorded for completeness. These are OTHER vendors' libraries that Vynaris
+    documents pointing at its base URL. None is a Vynaris package, so none is
+    official and none is counted above.
+  clients:
+  - name: openai (Python)
+    registry: pypi
+    official: false
+    owner: OpenAI
+    usage: OpenAI(base_url="https://api.vynaris.com/v1", api_key="vyn_sk_live_...")
+  - name: openai (TypeScript)
+    registry: npm
+    official: false
+    owner: OpenAI
+    usage: 'new OpenAI({ baseURL: "https://api.vynaris.com/v1", apiKey: "vyn_sk_live_..." })'
+  - name: anthropic (Python)
+    registry: pypi
+    official: false
+    owner: Anthropic
+    usage: anthropic.Anthropic(base_url="https://api.vynaris.com", auth_token="vyn_sk_live_...")
+    caveat: native /v1/messages is not implemented by Vynaris
+harness_integrations_documented:
+- Claude Code (ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN)
+- Cursor (custom OpenAI-compatible provider + base URL override)
+- Hermes / hermes-agent (custom_providers in ~/.hermes/config.yaml, key via key_env)
+- OpenClaw (~/.openclaw/openclaw.json, api "openai-completions")
+- Pi coding agent (~/.pi/agent/models.json, distinct key env var)
+note_on_pointer: >-
+  No SDKs pointer is emitted in apis.yml. sdk_count reads first-party client
+  libraries and Vynaris ships none; pointing at another vendor's SDK would
+  credit Vynaris with work it did not do.

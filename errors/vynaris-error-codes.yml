@@ -1,0 +1,80 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/docs#errors
+docs:
+- https://vynaris.com/docs#errors
+- https://api.vynaris.com/agents.md
+format: vendor
+rfc9457: false
+note: >-
+  Vynaris does not use application/problem+json. The envelope is the OpenAI
+  error shape, observed live on 2026-08-26. Vynaris publishes no OpenAPI, so
+  this catalog is read from the documented error reference plus one live
+  unauthenticated response - not derived from spec responses.
+envelope:
+  content_type: application/json
+  shape: '{"error": {"message": "<human readable>", "type": "<class>", "code": "<optional machine code>"}}'
+  observed_example: '{"error": {"message": "Missing API key. Pass it as: Authorization: Bearer vyn_sk_live_...", "type": "auth_error"}}'
+  observed_at: https://api.vynaris.com/v1/models
+  observed_status: 401
+problem_types:
+- status: 401
+  title: Unauthorized
+  type: auth_error
+  meaning: Missing, malformed, or revoked API key.
+  detail: >-
+    The message names the specific problem rather than returning a generic auth
+    failure. It distinguishes a truncated key (length mismatch) from an unknown
+    or revoked key, and detects a pasted OpenAI or Anthropic key by its prefix.
+  retryable: false
+  remediation: Supply a valid vyn_sk_live_ key in the Authorization header, or rotate the key in the dashboard.
+  source: https://vynaris.com/docs#errors
+- status: 402
+  title: Out of credits
+  code: hosted_model_paid_credit_required
+  meaning: >-
+    Available balance or the key's spend cap reached zero, or the account has
+    not yet purchased at least $50 in API credit (hosted reduced-refusal models
+    only, which is the case that carries the code above).
+  detail: >-
+    Documented as TERMINAL. The request was never sent upstream and nothing was
+    charged. The body carries top_up_url and balance.
+  retryable: false
+  terminal: true
+  agent_guidance: >-
+    The provider explicitly instructs an agent not to retry and to alert its
+    human instead. This is the single most operationally useful line in the
+    error reference for an autonomous caller.
+  remediation: Top up the balance or raise the key's spend cap, then send a NEW request.
+  source: https://vynaris.com/docs#errors
+- status: 502
+  title: Upstream error
+  meaning: The model provider that was selected to serve the request failed or timed out.
+  detail: No charge is made for a failed upstream call.
+  retryable: true
+  remediation: Retry is reasonable and documented as safe.
+  source: https://vynaris.com/docs#errors
+- status: 404
+  title: Not Found
+  meaning: Unknown path on api.vynaris.com.
+  detail: >-
+    Observed on 2026-08-26: unknown paths return a 179-byte text/html "Not
+    Found" page, NOT the JSON error envelope. An agent parsing every failure as
+    JSON will fail on a mistyped path.
+  retryable: false
+  method: probed
+  source: https://api.vynaris.com/openapi.json
+outage_behavior:
+  statement: >-
+    "During any Vynaris outage you get truthful 5xx codes, never a misleading
+    auth error."
+  source: https://api.vynaris.com/agents.md
+gaps:
+- >-
+  No 429 / rate-limit error is documented anywhere, and no published rate
+  limits exist to produce one. An agent cannot know in advance what
+  over-driving this API looks like.
+- >-
+  No error code registry with stable machine codes is published. Only
+  hosted_model_paid_credit_required is named; the rest are status codes plus
+  prose messages.

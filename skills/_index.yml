@@ -1,0 +1,47 @@
+generated: '2026-08-26'
+method: searched
+source: https://api.vynaris.com/agents.md
+name: Vynaris Agent Skills
+description: >-
+  Vynaris publishes its own agent-facing operations manual at
+  https://api.vynaris.com/agents.md and links it from llms.txt as "the complete
+  agent-facing manual - read this". It is saved here verbatim rather than
+  generated, because the provider authored it: it carries the onboarding flow,
+  the behavior contract, error semantics, harness configuration for six named
+  harnesses, and precise pricing an agent can compute with. No skill in this
+  index was authored by API Evangelist.
+skills:
+- file: vynaris-agents.md
+  name: vynaris-operations-runbook
+  title: Vynaris agent onboarding and operations runbook
+  method: searched
+  source: https://api.vynaris.com/agents.md
+  fetched: '2026-08-26'
+  http_status: 200
+  content_type: text/plain; charset=utf-8
+  bytes: 12023
+  provider_last_updated: '2026-08-22'
+  api: Vynaris Gateway API
+  operations:
+  - POST /v1/accounts
+  - GET /v1/ping
+  - POST /v1/chat/completions
+  - GET /v1/models
+  - GET /v1/usage
+  - GET /v1/ledger
+  covers:
+  - programmatic self-onboarding (POST /v1/accounts returns a provisional key, $0 balance)
+  - connectivity and key-state bisection via GET /v1/ping
+  - first request against model "auto"
+  - the response cost receipt (vynaris block + x-vynaris-* headers)
+  - error semantics including the terminal, do-not-retry 402
+  - harness configuration for OpenAI SDK, Anthropic Python SDK, Claude Code, Cursor, Hermes, OpenClaw and Pi
+  - a stated "cases where Vynaris may not fit" section
+notes:
+- >-
+  There is no OpenAPI for this provider, so operations above are the endpoint
+  strings the provider documents in prose, not operationIds resolved from a
+  machine-readable contract.
+- >-
+  No API-Evangelist-generated skills were added. The provider-published runbook
+  is a stronger artifact than anything this pipeline could derive without a spec.

@@ -1,0 +1,78 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/docs
+docs:
+- https://vynaris.com/docs#quickstart
+- https://api.vynaris.com/agents.md
+- https://vynaris.com/terms
+- https://vynaris.com/privacy
+note: >-
+  Derived by reading the provider's published documentation, not from an
+  OpenAPI - Vynaris publishes no machine-readable contract, so
+  derive-authentication.py had no securitySchemes to read. Every statement here
+  is traceable to a docs URL below or to a live response observed on
+  2026-08-26.
+schemes:
+- id: bearer_api_key
+  type: http
+  scheme: bearer
+  in: header
+  header: Authorization
+  format: 'Authorization: Bearer vyn_sk_live_...'
+  key_prefix: vyn_sk_live_
+  key_length_chars: 55
+  applies_to:
+  - POST /v1/chat/completions
+  - GET /v1/models
+  - GET /v1/usage
+  - GET /v1/ledger
+  - GET /v1/ping
+  source: https://vynaris.com/docs#quickstart
+- id: anonymous
+  type: none
+  applies_to:
+  - POST /v1/accounts
+  - GET /v1/ping
+  note: >-
+    POST /v1/accounts takes {"email": "..."} with no credential and returns a
+    provisional key - the provider calls this "fully programmatic until money".
+    GET /v1/ping answered 200 anonymously on 2026-08-26 with
+    {"ok": true, "key": "invalid_or_missing"}.
+  source: https://api.vynaris.com/agents.md
+oauth2: false
+openid_connect: false
+mutual_tls: false
+scopes:
+  model: none
+  note: >-
+    There is no OAuth scope surface. Authorization is per-key, and the levers
+    are spend caps and a provider-collection toggle rather than named scopes,
+    so no scopes/ artifact is emitted.
+key_management:
+  storage: hashed server-side, never stored in plain text
+  visibility: shown once at creation
+  rotation: revocable per key
+  spend_caps: optional per-key spend cap
+  recommended_practice: one key per harness or machine so each can be revoked independently
+  privacy_toggle: >-
+    Each key starts metadata-only. A user may enable additional providers on an
+    individual key, which unlocks more models and lower prices but subjects
+    request content to those providers' own retention and training terms, and
+    also causes Vynaris to store full request/response transcripts.
+  source: https://api.vynaris.com/agents.md
+account_auth:
+  methods:
+  - email and password
+  - GitHub
+  - Google
+  console: https://app.vynaris.com/signin
+  source: https://vynaris.com/terms
+observed:
+- url: https://api.vynaris.com/v1/models
+  status: 401
+  body: '{"error": {"message": "Missing API key. Pass it as: Authorization: Bearer vyn_sk_live_...", "type": "auth_error"}}'
+  fetched: '2026-08-26'
+- url: https://api.vynaris.com/v1/ping
+  status: 200
+  body: '{"ok": true, "key": "invalid_or_missing"}'
+  fetched: '2026-08-26'

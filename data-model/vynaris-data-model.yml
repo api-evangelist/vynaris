@@ -1,0 +1,182 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/docs
+docs:
+- https://vynaris.com/docs#receipt
+- https://vynaris.com/docs#usage
+- https://api.vynaris.com/agents.md
+note: >-
+  There is no OpenAPI and therefore no $ref graph to derive from. This model is
+  read from the response shapes and endpoint descriptions the provider
+  publishes verbatim. Field lists are what the docs show; they are not
+  exhaustive and are not a substitute for a contract. Entities marked
+  inferred_from_prose have no published payload example.
+entities:
+- name: CompletionResponse
+  description: OpenAI Chat Completions response, extended with the Vynaris receipt.
+  fields:
+  - name: id
+    type: string
+    example: chatcmpl-8f2a91
+  - name: choices
+    type: array
+    note: standard OpenAI shape
+  - name: vynaris
+    type: object
+    ref: Receipt
+    note: non-standard top-level extension
+  source: https://vynaris.com/docs#receipt
+- name: Receipt
+  description: >-
+    The provider's signature object. Attached to every non-streaming response
+    and mirrored into x-vynaris-* response headers.
+  fields:
+  - name: request_id
+    type: string
+    example: req_8f2a91
+    id_prefix: req_
+  - name: requested_model
+    type: string
+    description: the model the caller asked for, or "auto"
+  - name: served_model
+    type: string
+    description: the model that actually served the request; always named, never silently substituted
+  - name: cost_usd
+    type: string|number
+    description: what this request cost against the prepaid balance
+  - name: direct_equivalent_usd
+    type: string|number
+    description: what the same tokens would have cost at the requested model's list price
+  - name: baseline
+    type: string
+    example: provider list price, uncached
+    note: present in the agents.md example, absent from the docs page example
+  source: https://vynaris.com/docs#receipt
+- name: Account
+  description: Created by POST /v1/accounts. Starts at $0 balance.
+  fields:
+  - name: api_key
+    type: string
+    id_prefix: vyn_sk_live_
+    length: 55
+    note: shown once at creation; stored hashed server-side
+  - name: claim_url
+    type: string
+    description: URL a human visits to verify the email and fund the account
+  - name: note
+    type: string
+  source: https://api.vynaris.com/agents.md
+- name: Balance
+  description: Returned by GET /v1/usage. Prepaid credit, denominated in USD.
+  inferred_from_prose: true
+  fields:
+  - name: balance
+    type: number
+  - name: recent_requests
+    type: array
+    ref: LedgerEntry
+  source: https://vynaris.com/docs#usage
+- name: LedgerEntry
+  description: >-
+    One row of the append-only credit ledger returned by GET /v1/ledger.
+    Exportable as CSV from the dashboard; the provider states the CSV
+    recomputes to the same totals.
+  inferred_from_prose: true
+  fields:
+  - name: request_id
+    type: string
+    id_prefix: req_
+  - name: requested_model
+    type: string
+  - name: served_model
+    type: string
+  - name: cost_usd
+    type: number
+  - name: direct_equivalent_usd
+    type: number
+  entry_kinds:
+  - deposit
+  - grant
+  - usage
+  source: https://vynaris.com/docs#usage
+- name: ApiKey
+  description: Per-key credential with its own spend cap and privacy posture.
+  inferred_from_prose: true
+  fields:
+  - name: prefix
+    type: string
+    note: privacy policy states only the key prefix is retained in request metadata, never the full key
+  - name: spend_cap
+    type: number
+    optional: true
+  - name: provider_data_collection_enabled
+    type: boolean
+    description: >-
+      Off by default (metadata-only). Enabling it unlocks more models and lower
+      prices, subjects content to the upstream provider's terms, and causes
+      Vynaris to store full request/response transcripts.
+  - name: transcript_capture
+    type: boolean
+    note: forced off for the three Vynaris-hosted reduced-refusal model IDs regardless of this setting
+  source: https://vynaris.com/privacy
+- name: Model
+  description: Entry in the authenticated catalog returned by GET /v1/models.
+  inferred_from_prose: true
+  fields:
+  - name: id
+    type: string
+    examples:
+    - auto
+    - vynaris/qwen3.6-35b-a3b-uncensored
+    - vynaris/qwen3.8-27b-uncensored
+    - vynaris/deepseek-v4-flash-uncensored
+  - name: retail_price
+    type: object
+    note: input and output per-million-token rates
+  - name: context
+    type: integer
+    note: hosted models documented at up to 128K API context
+  - name: paid_credit_qualification
+    type: boolean
+  source: https://vynaris.com/docs#usage
+relationships:
+- from: CompletionResponse
+  to: Receipt
+  kind: has_one
+  via: vynaris
+- from: CompletionResponse
+  to: Model
+  kind: belongs_to
+  via: vynaris.served_model
+- from: Receipt
+  to: LedgerEntry
+  kind: has_one
+  via: request_id
+  note: the receipt's request_id is the join key to the ledger row for that call
+- from: Account
+  to: ApiKey
+  kind: has_many
+  via: account
+  note: the provider recommends one key per harness or machine so each can be revoked independently
+- from: Account
+  to: Balance
+  kind: has_one
+- from: Balance
+  to: LedgerEntry
+  kind: has_many
+  via: account
+- from: ApiKey
+  to: LedgerEntry
+  kind: has_many
+  via: key prefix
+id_prefixes:
+- prefix: req_
+  entity: Receipt / LedgerEntry
+- prefix: chatcmpl-
+  entity: CompletionResponse
+  note: inherited from the OpenAI wire format
+- prefix: vyn_sk_live_
+  entity: ApiKey
+- prefix: 'vynaris/'
+  entity: Model
+  note: namespace for Vynaris-hosted models, which the router never substitutes

@@ -1,0 +1,70 @@
+generated: '2026-08-26'
+method: searched
+source: https://vynaris.com/docs
+docs:
+- https://vynaris.com/docs#errors
+- https://api.vynaris.com/agents.md
+- https://vynaris.com/uncensored-models
+- https://vynaris.com/terms
+limit_count: 0
+note: >-
+  Vynaris publishes NO rate limits. Every public surface was read on 2026-08-26
+  - the docs page, agents.md, llms.txt, the terms, the pricing page and the
+  hosted-model pages - and none states a requests-per-second, per-minute,
+  per-day, token-per-minute or concurrency ceiling. This is an honest zero, not
+  an unchecked field. It is a real gap for an autonomous caller: the provider
+  markets programmatic self-onboarding and agent operation, and an agent that
+  self-onboards has no published number telling it how hard it may drive the
+  API.
+rate_limits: []
+response_headers:
+  published: false
+  x_ratelimit: none documented
+  ratelimit_rfc: none documented
+  retry_after: none documented
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header appears in any
+    published Vynaris surface. The documented response headers are all cost
+    telemetry (x-vynaris-request-id, x-vynaris-served-model,
+    x-vynaris-cost-usd, x-vynaris-baseline-usd, x-vynaris-saved,
+    x-vynaris-balance) - the provider instruments spend, not throughput.
+status_on_exhaustion:
+  http_429: not documented
+  note: >-
+    No 429 is documented. The documented failure modes are 401, 402 and 502
+    only. The terms do refer to "bypass its rate or budget limits" as
+    prohibited conduct, which implies limits exist and are enforced - they are
+    simply not published.
+economic_limits:
+  description: >-
+    The only backpressure Vynaris documents is financial rather than
+    throughput-based, and it is well specified.
+  controls:
+  - control: prepaid balance floor
+    behavior: requests stop when available balance reaches zero
+    status: 402
+    terminal: true
+    source: https://vynaris.com/docs#errors
+  - control: per-key spend cap
+    behavior: optional cap per API key; hitting it returns the same terminal 402
+    source: https://api.vynaris.com/agents.md
+  - control: no overages
+    behavior: usage is never billed beyond the prepaid balance
+    source: https://vynaris.com/pricing
+  - control: in-flight float
+    behavior: >-
+      "balance never goes materially negative - at most one in-flight request
+      of float, because streams are never cut mid-completion"
+    source: https://api.vynaris.com/agents.md
+concurrency_guidance:
+  published: true
+  quantified: false
+  scope: Vynaris-hosted reduced-refusal models only
+  text: >-
+    "Concurrent requests use shared queued capacity; do not create a new worker
+    per end user." The first request after an idle period can take longer while
+    private capacity starts and weights load.
+  note: >-
+    This is directional advice, not a limit. No maximum concurrency, queue
+    depth, or cold-start timeout is given.
+  source: https://vynaris.com/docs#hosted-models
