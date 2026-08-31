@@ -20,6 +20,14 @@ modified: '2026-08-26'
 specificationVersion: '0.21'
 image: https://vynaris.com/icon.png
 tags:
+- Artificial Intelligence
+- LLM Gateway
+- LLM Router / Aggregator
+- Inference / Model Serving
+- AI Cost Management / FinOps
+- Developer Tools
+- Agent Infrastructure
+tags_raw:
 - AI
 - LLM Gateway
 - LLM Router / Aggregator
@@ -39,6 +47,14 @@ apis:
   humanURL: https://vynaris.com/docs
   baseURL: https://api.vynaris.com/v1
   tags:
+  - Artificial Intelligence
+  - LLM Gateway
+  - LLM Router / Aggregator
+  - Inference / Model Serving
+  - AI Cost Management / FinOps
+  - Developer Tools
+  - Agent Infrastructure
+  tags_raw:
   - AI
   - LLM Gateway
   - LLM Router / Aggregator
