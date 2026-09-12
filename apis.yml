@@ -94,6 +94,8 @@ generated:
   confidence: 90
   at: '2026-08-26T19:07:38.480Z'
 common:
+- type: Website
+  url: https://www.vynaris.com/
 - type: DomainSecurity
   url: security/vynaris-domain-security.yml
 - type: Conventions
