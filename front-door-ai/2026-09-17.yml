@@ -1,0 +1,36 @@
+# Front Door AI Index — vynaris — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: vynaris
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.vynaris.com
+  final_host: vynaris.com
+  ownership: own
+  owner: vynaris
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 30
+  host_score: 30
+  density: 27.57
+  words: 1088
+  tiers:
+    agentic: 4
+    core: 10
+    model: 16
+  ambiguous: 5
+  top_terms:
+    AI: 8
+    OpenAI: 8
+    agent: 5
+    Anthropic: 3
+    GPT: 2
+    LLMs: 2
+    prompts: 2
+    Claude: 1
+    Llama: 1
+    Mistral: 1
+    fine-tune: 1
+    inference: 1
