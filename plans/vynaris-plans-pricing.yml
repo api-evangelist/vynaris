@@ -138,3 +138,42 @@ machine_readable_pricing:
     prices, context and paid-credit qualification - but it requires a funded
     key (401 anonymously on 2026-08-26), so no anonymous machine-readable
     price feed exists. https://vynaris.com/models is a human pricing table.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  - subscription
+  units: []
+  plans:
+  - name: Pay-as-you-go (router)
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Vynaris S
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods: []
+  - name: Vynaris L
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods: []
+  - name: Vynaris XL
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods: []
+  - name: Enterprise (self-hosted)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
