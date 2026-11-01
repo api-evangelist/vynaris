@@ -1,4 +1,4 @@
-# vynaris
+# Vynaris
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -65,3 +65,107 @@
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
 OpenAI-compatible LLM inference gateway with evidence-based model routing and a per-request cost receipt attached to every response. Offers routed inference at provider list price plus a small markup, Vynaris-hosted reduced-refusal models, and enterprise self-hosted deployments. Early beta.
+
+**Areas:** Artificial Intelligence · LLM Gateway · LLM Router / Aggregator · Inference / Model Serving · AI Cost Management / FinOps · Developer Tools · Agent Infrastructure
+
+## Vynaris on APIs.io
+
+Everything profiled for Vynaris is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/vynaris/](https://apis.io/providers/vynaris/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [Vynaris Gateway API](https://apis.io/apis/vynaris/vynaris-gateway-api/) — REST API in OpenAI Chat Completions wire format. Primary endpoint POST /v1/chat/completions with SSE streaming and tool/function-calling passthrough.…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Vynaris MCP (none published)](https://apis.io/servers/vynaris/vynaris-mcp-none-published/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Vynaris Authentication](https://apis.io/security/vynaris/vynaris-authentication/)
+- [Vynaris Domain Security](https://apis.io/security/vynaris/vynaris-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Vynaris Plans Pricing](https://apis.io/plans/vynaris/vynaris-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Vynaris Rate Limits](https://apis.io/rate-limits/vynaris/vynaris-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.vynaris.com/)
+- [Getting started](https://vynaris.com/docs#quickstart)
+- [Pricing](https://vynaris.com/pricing)
+- [Sign up](https://app.vynaris.com/signin)
+- [Blog](https://vynaris.com/blog)
+- [Terms of service](https://vynaris.com/terms)
+- [Privacy policy](https://vynaris.com/privacy)
+
+## API Evangelist rating
+
+**Kin Score 35.4** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 47.6 |
+| Access clarity | 76.3 |
+
+**Agent readiness 11.5** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 22.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/vynaris/](https://apis.io/providers/vynaris/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Vynaris: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/vynaris/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
